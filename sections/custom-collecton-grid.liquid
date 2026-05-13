@@ -312,6 +312,14 @@ AND REPLACE IT WITH THE CODE BELOW.
   opacity: 1;
 }
 
+.hcs-card:has(.hcs-content:hover) .hcs-image-primary {
+  opacity: 1;
+}
+
+.hcs-card:has(.hcs-content:hover) .hcs-image-hover {
+  opacity: 0;
+}
+
 .hcs-card-inner {
   display: flex;
   flex-direction: column;
@@ -436,7 +444,7 @@ AND REPLACE IT WITH THE CODE BELOW.
   background: #999;
   cursor: not-allowed;
 }
-/* Add this CSS at the end of your existing <style> block */
+/* Disabled state styles */
 
 .hcs-size.disabled,
 .hcs-swatch.disabled {
