@@ -91,15 +91,16 @@
   }
 
   .promo-banner-grid__card {
-    position: relative;
+        position: relative;
     display: flex;
     align-items: stretch;
-    min-height: 320px;
+    min-height: inherit;
     background: var(--card-bg);
     overflow: hidden;
     text-decoration: none;
     color: inherit;
     transition: transform 0.35s ease;
+    aspect-ratio: 1;
   }
 
   .promo-banner-grid__card:hover {
@@ -107,13 +108,18 @@
   }
 
   .promo-banner-grid__content {
-    width: 48%;
-    padding: 38px 24px 38px 40px;
+        width: 100%;
+    padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative;
+    position: absolute;
     z-index: 2;
+    left: 0;
+    padding: 15px;
+    bottom: 0;
+    background-color: #f6ece3c9;
+}
   }
 
   .promo-banner-grid__title {
@@ -136,18 +142,19 @@
   }
 
   .promo-banner-grid__image {
-    width: 52%;
+    width: 100%;
     position: relative;
     overflow: hidden;
   }
 
   .promo-banner-grid__image img,
   .promo-banner-grid__image svg {
-    width: 100%;
+        width: 100%;
     height: 100%;
     display: block;
     object-fit: cover;
     transition: transform 0.5s ease;
+    object-position: center 0;
   }
 
   .promo-banner-grid__card:hover .promo-banner-grid__image img {
