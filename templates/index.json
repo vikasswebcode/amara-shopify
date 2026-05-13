@@ -284,21 +284,10 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
-    },
-    "custom_collection_showcase_ryxKeU": {
-      "type": "custom-collection-showcase",
-      "name": "Collection Showcase",
-      "settings": {
-        "heading": "Shop the Collection",
-        "collection": "frontpage",
-        "products_per_row": 4,
-        "rows": 2
-      }
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H",
-    "custom_collection_showcase_ryxKeU"
+    "product_list_fa6P9H"
   ]
 }
