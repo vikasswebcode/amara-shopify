@@ -87,7 +87,7 @@
                       {% unless shown_colors contains token %}
                         {% assign shown_colors = shown_colors | append: token %}
 
-                        {% if visible_count < 3 %}
+                        {% if visible_count < 5 %}
                           <button
                             type="button"
                             class="hcs-swatch{% if visible_count == 0 %} active{% endif %}"
