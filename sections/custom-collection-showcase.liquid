@@ -1,0 +1,603 @@
+{% comment %} Custom Collection Showcase — Dynamic, Responsive, Color Swatches + Sizes + ATC {% endcomment %}
+
+{% assign tablet_cols = section.settings.products_per_row | minus: 1 %}
+{% if tablet_cols < 2 %}{% assign tablet_cols = 2 %}{% endif %}
+{% assign products_limit = section.settings.products_per_row | times: section.settings.rows %}
+
+<style>
+  #ccs-{{ section.id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 50px 20px;
+  }
+  #ccs-{{ section.id }} .ccs-heading {
+    text-align: center;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 700;
+    margin: 0 0 36px;
+    color: #1a1a1a;
+  }
+  #ccs-{{ section.id }} .ccs-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.products_per_row }}, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 1024px) {
+    #ccs-{{ section.id }} .ccs-grid {
+      grid-template-columns: repeat({{ tablet_cols }}, 1fr);
+    }
+  }
+  @media (max-width: 768px) {
+    #ccs-{{ section.id }} .ccs-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+  @media (max-width: 480px) {
+    #ccs-{{ section.id }} .ccs-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Card */
+  #ccs-{{ section.id }} .ccs-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  #ccs-{{ section.id }} .ccs-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  }
+
+  /* Image */
+  #ccs-{{ section.id }} .ccs-img-wrap {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+  #ccs-{{ section.id }} .ccs-img-wrap a {
+    display: block;
+    height: 100%;
+  }
+  #ccs-{{ section.id }} .ccs-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+  }
+  #ccs-{{ section.id }} .ccs-card:hover .ccs-img {
+    transform: scale(1.05);
+  }
+  #ccs-{{ section.id }} .ccs-img.is-loading {
+    opacity: 0.6;
+  }
+  #ccs-{{ section.id }} .ccs-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #e63946;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    pointer-events: none;
+  }
+
+  /* Body */
+  #ccs-{{ section.id }} .ccs-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  #ccs-{{ section.id }} .ccs-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.35;
+  }
+  #ccs-{{ section.id }} .ccs-title a {
+    color: #1a1a1a;
+    text-decoration: none;
+  }
+  #ccs-{{ section.id }} .ccs-title a:hover {
+    color: #555;
+  }
+
+  /* Price */
+  #ccs-{{ section.id }} .ccs-price {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    min-height: 24px;
+  }
+  #ccs-{{ section.id }} .ccs-price-regular {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #1a1a1a;
+  }
+  #ccs-{{ section.id }} .ccs-price-sale {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #e63946;
+  }
+  #ccs-{{ section.id }} .ccs-price-compare {
+    font-size: 0.85rem;
+    color: #aaa;
+    text-decoration: line-through;
+  }
+
+  /* Swatches */
+  #ccs-{{ section.id }} .ccs-swatches-wrap {}
+  #ccs-{{ section.id }} .ccs-option-label {
+    font-size: 0.75rem;
+    color: #777;
+    margin-bottom: 6px;
+    display: block;
+  }
+  #ccs-{{ section.id }} .ccs-option-label strong {
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+  #ccs-{{ section.id }} .ccs-swatches-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  #ccs-{{ section.id }} .ccs-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.15s, border-color 0.15s;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+  }
+  #ccs-{{ section.id }} .ccs-swatch:hover {
+    transform: scale(1.2);
+  }
+  #ccs-{{ section.id }} .ccs-swatch.is-active {
+    border-color: #1a1a1a;
+    box-shadow: 0 0 0 2px #1a1a1a, inset 0 0 0 1px rgba(0,0,0,0.1);
+  }
+
+  /* Sizes */
+  #ccs-{{ section.id }} .ccs-sizes-wrap {}
+  #ccs-{{ section.id }} .ccs-sizes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  #ccs-{{ section.id }} .ccs-size-btn {
+    min-width: 36px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: #1a1a1a;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  #ccs-{{ section.id }} .ccs-size-btn:hover:not(.is-unavail) {
+    border-color: #1a1a1a;
+  }
+  #ccs-{{ section.id }} .ccs-size-btn.is-active {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+  }
+  #ccs-{{ section.id }} .ccs-size-btn.is-unavail {
+    color: #ccc;
+    border-color: #eee;
+    cursor: not-allowed;
+    position: relative;
+  }
+  #ccs-{{ section.id }} .ccs-size-btn.is-unavail::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    right: 4px;
+    height: 1px;
+    background: #ccc;
+    transform: rotate(-15deg);
+  }
+
+  /* ATC */
+  #ccs-{{ section.id }} .ccs-atc-btn {
+    width: 100%;
+    padding: 12px 16px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.4px;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: auto;
+  }
+  #ccs-{{ section.id }} .ccs-atc-btn:hover:not(:disabled) {
+    background: #333;
+  }
+  #ccs-{{ section.id }} .ccs-atc-btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  #ccs-{{ section.id }} .ccs-atc-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  #ccs-{{ section.id }} .ccs-atc-btn.is-success {
+    background: #2a9d2a;
+  }
+  #ccs-{{ section.id }} .ccs-atc-btn.is-loading {
+    opacity: 0.65;
+    pointer-events: none;
+  }
+  #ccs-{{ section.id }} .ccs-feedback {
+    font-size: 0.76rem;
+    min-height: 16px;
+    text-align: center;
+  }
+  #ccs-{{ section.id }} .ccs-empty {
+    text-align: center;
+    color: #999;
+    padding: 60px 20px;
+    font-size: 1rem;
+  }
+</style>
+
+<div id="ccs-{{ section.id }}">
+  {% if section.settings.heading != blank %}
+    <h2 class="ccs-heading">{{ section.settings.heading }}</h2>
+  {% endif %}
+
+  {% assign sel_collection = collections[section.settings.collection] %}
+
+  {% if sel_collection != blank and sel_collection.products.size > 0 %}
+    <div class="ccs-grid">
+
+      {% for product in sel_collection.products limit: products_limit %}
+
+        {% assign color_idx = nil %}
+        {% assign size_idx = nil %}
+        {% for opt in product.options %}
+          {% assign opt_lc = opt | downcase %}
+          {% if opt_lc == 'color' or opt_lc == 'colour' %}
+            {% assign color_idx = forloop.index0 %}
+          {% endif %}
+          {% if opt_lc == 'size' %}
+            {% assign size_idx = forloop.index0 %}
+          {% endif %}
+        {% endfor %}
+
+        {% assign first_variant = product.first_available_variant %}
+        {% if first_variant == nil %}{% assign first_variant = product.variants.first %}{% endif %}
+
+        <div class="ccs-card" data-pid="{{ product.id }}">
+
+          {%- comment -%} IMAGE {%- endcomment -%}
+          <div class="ccs-img-wrap">
+            <a href="{{ product.url }}">
+              <img
+                id="ccs-img-{{ product.id }}"
+                class="ccs-img"
+                src="{{ product.featured_image | image_url: width: 600 }}"
+                alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                width="600"
+                height="600"
+                loading="lazy"
+              >
+            </a>
+            {% if product.compare_at_price > product.price %}
+              <span class="ccs-badge">Sale</span>
+            {% endif %}
+          </div>
+
+          {%- comment -%} BODY {%- endcomment -%}
+          <div class="ccs-body">
+
+            <h3 class="ccs-title">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+            </h3>
+
+            <div class="ccs-price" id="ccs-price-{{ product.id }}">
+              {% if product.compare_at_price > product.price %}
+                <span class="ccs-price-sale">{{ product.price | money }}</span>
+                <span class="ccs-price-compare">{{ product.compare_at_price | money }}</span>
+              {% else %}
+                <span class="ccs-price-regular">{{ product.price | money }}</span>
+              {% endif %}
+            </div>
+
+            {%- comment -%} COLOR SWATCHES {%- endcomment -%}
+            {% if color_idx != nil %}
+              {% assign color_opt = product.options_with_values[color_idx] %}
+              <div class="ccs-swatches-wrap">
+                <span class="ccs-option-label">Color: <strong id="ccs-cv-{{ product.id }}">{{ color_opt.values.first }}</strong></span>
+                <div class="ccs-swatches-list">
+                  {% for cv in color_opt.values %}
+                    <button
+                      class="ccs-swatch{% if forloop.first %} is-active{% endif %}"
+                      data-pid="{{ product.id }}"
+                      data-color="{{ cv }}"
+                      data-cidx="{{ color_idx }}"
+                      style="background-color: {{ cv | handle }};"
+                      title="{{ cv }}"
+                      aria-label="{{ cv }}"
+                    ></button>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+            {%- comment -%} SIZE VARIANTS {%- endcomment -%}
+            {% if size_idx != nil %}
+              {% assign size_opt = product.options_with_values[size_idx] %}
+              <div class="ccs-sizes-wrap">
+                <span class="ccs-option-label">Size: <strong id="ccs-sv-{{ product.id }}">{{ size_opt.values.first }}</strong></span>
+                <div class="ccs-sizes-list">
+                  {% for sv in size_opt.values %}
+                    <button
+                      class="ccs-size-btn{% if forloop.first %} is-active{% endif %}"
+                      data-pid="{{ product.id }}"
+                      data-size="{{ sv }}"
+                      data-sidx="{{ size_idx }}"
+                    >{{ sv }}</button>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+            {%- comment -%} VARIANTS JSON {%- endcomment -%}
+            <script type="application/json" id="ccs-vdata-{{ product.id }}">
+              [{% for v in product.variants %}{"id":{{ v.id }},"available":{{ v.available }},"price":{{ v.price }},"compare_at_price":{% if v.compare_at_price %}{{ v.compare_at_price }}{% else %}null{% endif %},"options":{{ v.options | json }},"img":{% if v.featured_image %}"{{ v.featured_image.src | image_url: width: 600 }}"{% else %}null{% endif %}}{% unless forloop.last %},{% endunless %}{% endfor %}]
+            </script>
+
+            {%- comment -%} ADD TO CART {%- endcomment -%}
+            <button
+              id="ccs-atc-{{ product.id }}"
+              class="ccs-atc-btn"
+              data-pid="{{ product.id }}"
+              data-vid="{{ first_variant.id }}"
+              {% unless product.available %}disabled{% endunless %}
+            >{% if product.available %}Add to Cart{% else %}Sold Out{% endif %}</button>
+
+            <div class="ccs-feedback" id="ccs-fb-{{ product.id }}"></div>
+
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  {% else %}
+    <p class="ccs-empty">Please select a collection in the theme editor.</p>
+  {% endif %}
+</div>
+
+<script>
+(function () {
+  function getVariants(pid) {
+    var el = document.getElementById('ccs-vdata-' + pid);
+    if (!el) return [];
+    try { return JSON.parse(el.textContent); } catch (e) { return []; }
+  }
+
+  function getCard(pid) {
+    return document.querySelector('.ccs-card[data-pid="' + pid + '"]');
+  }
+
+  function getSelectedOpts(pid) {
+    var card = getCard(pid);
+    if (!card) return [];
+    var opts = [];
+    var swatch = card.querySelector('.ccs-swatch.is-active');
+    if (swatch) opts[parseInt(swatch.dataset.cidx)] = swatch.dataset.color;
+    var sizeBtn = card.querySelector('.ccs-size-btn.is-active');
+    if (sizeBtn) opts[parseInt(sizeBtn.dataset.sidx)] = sizeBtn.dataset.size;
+    return opts;
+  }
+
+  function findVariant(variants, opts) {
+    return variants.find(function (v) {
+      return opts.every(function (val, idx) {
+        return val === undefined || v.options[idx] === val;
+      });
+    });
+  }
+
+  function formatMoney(cents) {
+    return '$' + (cents / 100).toFixed(2);
+  }
+
+  function updatePrice(pid, variant) {
+    var el = document.getElementById('ccs-price-' + pid);
+    if (!el || !variant) return;
+    if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+      el.innerHTML = '<span class="ccs-price-sale">' + formatMoney(variant.price) + '</span><span class="ccs-price-compare">' + formatMoney(variant.compare_at_price) + '</span>';
+    } else {
+      el.innerHTML = '<span class="ccs-price-regular">' + formatMoney(variant.price) + '</span>';
+    }
+  }
+
+  function updateImage(pid, variant) {
+    if (!variant || !variant.img) return;
+    var img = document.getElementById('ccs-img-' + pid);
+    if (!img) return;
+    img.classList.add('is-loading');
+    var tmp = new Image();
+    tmp.onload = function () {
+      img.src = variant.img;
+      img.classList.remove('is-loading');
+    };
+    tmp.src = variant.img;
+  }
+
+  function updateATCBtn(pid, variant) {
+    var btn = document.getElementById('ccs-atc-' + pid);
+    if (!btn) return;
+    if (!variant || !variant.available) {
+      btn.disabled = true;
+      btn.textContent = 'Sold Out';
+    } else {
+      btn.disabled = false;
+      btn.dataset.vid = variant.id;
+      if (!btn.classList.contains('is-success')) btn.textContent = 'Add to Cart';
+    }
+  }
+
+  function refreshSizeAvailability(pid) {
+    var card = getCard(pid);
+    if (!card) return;
+    var variants = getVariants(pid);
+    var activeSwatch = card.querySelector('.ccs-swatch.is-active');
+    var colorVal = activeSwatch ? activeSwatch.dataset.color : null;
+    var colorIdx = activeSwatch ? parseInt(activeSwatch.dataset.cidx) : null;
+
+    card.querySelectorAll('.ccs-size-btn').forEach(function (btn) {
+      var size = btn.dataset.size;
+      var sIdx = parseInt(btn.dataset.sidx);
+      var avail = variants.some(function (v) {
+        var cMatch = colorIdx === null || v.options[colorIdx] === colorVal;
+        return cMatch && v.options[sIdx] === size && v.available;
+      });
+      btn.classList.toggle('is-unavail', !avail);
+    });
+  }
+
+  /* COLOR SWATCH CLICK */
+  document.addEventListener('click', function (e) {
+    var sw = e.target.closest('.ccs-swatch');
+    if (!sw) return;
+    var pid = sw.dataset.pid;
+    var card = getCard(pid);
+    card.querySelectorAll('.ccs-swatch').forEach(function (s) { s.classList.remove('is-active'); });
+    sw.classList.add('is-active');
+    var cvEl = document.getElementById('ccs-cv-' + pid);
+    if (cvEl) cvEl.textContent = sw.dataset.color;
+    refreshSizeAvailability(pid);
+    var v = findVariant(getVariants(pid), getSelectedOpts(pid));
+    updateImage(pid, v);
+    updatePrice(pid, v);
+    updateATCBtn(pid, v);
+  });
+
+  /* SIZE BUTTON CLICK */
+  document.addEventListener('click', function (e) {
+    var sb = e.target.closest('.ccs-size-btn');
+    if (!sb || sb.classList.contains('is-unavail')) return;
+    var pid = sb.dataset.pid;
+    var card = getCard(pid);
+    card.querySelectorAll('.ccs-size-btn').forEach(function (b) { b.classList.remove('is-active'); });
+    sb.classList.add('is-active');
+    var svEl = document.getElementById('ccs-sv-' + pid);
+    if (svEl) svEl.textContent = sb.dataset.size;
+    var v = findVariant(getVariants(pid), getSelectedOpts(pid));
+    updatePrice(pid, v);
+    updateATCBtn(pid, v);
+  });
+
+  /* ADD TO CART */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.ccs-atc-btn');
+    if (!btn || btn.disabled) return;
+    var pid = btn.dataset.pid;
+    var vid = btn.dataset.vid;
+    var fb = document.getElementById('ccs-fb-' + pid);
+
+    btn.classList.add('is-loading');
+    btn.textContent = 'Adding...';
+    if (fb) { fb.textContent = ''; fb.style.color = ''; }
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: parseInt(vid), quantity: 1 })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      btn.classList.remove('is-loading');
+      if (data.status) {
+        btn.textContent = 'Add to Cart';
+        if (fb) { fb.textContent = data.description || 'Could not add item.'; fb.style.color = '#e63946'; }
+      } else {
+        btn.classList.add('is-success');
+        btn.textContent = 'Added ✓';
+        if (fb) { fb.textContent = 'Added to cart!'; fb.style.color = '#2a9d2a'; }
+        document.dispatchEvent(new CustomEvent('cart:refresh'));
+        setTimeout(function () {
+          btn.classList.remove('is-success');
+          btn.textContent = 'Add to Cart';
+          if (fb) fb.textContent = '';
+        }, 2500);
+      }
+    })
+    .catch(function () {
+      btn.classList.remove('is-loading');
+      btn.textContent = 'Add to Cart';
+      if (fb) { fb.textContent = 'Something went wrong.'; fb.style.color = '#e63946'; }
+    });
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Custom Collection Showcase",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Shop the Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Products per row (Desktop)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "rows",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "label": "Rows",
+      "default": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection Showcase"
+    }
+  ]
+}
+{% endschema %}
