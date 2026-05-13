@@ -43,7 +43,19 @@
                       width="{{ display_image.width }}"
                       height="{{ display_image.height }}"
                       loading="lazy"
-                      class="hcs-image"
+                      class="hcs-image hcs-image-primary"
+                    >
+                  {% endif %}
+
+                  {% assign hover_image = product.images[1] %}
+                  {% if hover_image %}
+                    <img
+                      src="{{ hover_image | image_url: width: 800 }}"
+                      alt="{{ product.title | escape }}"
+                      width="{{ hover_image.width }}"
+                      height="{{ hover_image.height }}"
+                      loading="lazy"
+                      class="hcs-image hcs-image-hover"
                     >
                   {% endif %}
                 </div>
@@ -264,15 +276,54 @@ AND REPLACE IT WITH THE CODE BELOW.
   background: #ececec;
   aspect-ratio: 4 / 5;
   overflow: hidden;
+  position: relative;
 }
 
 .hcs-image {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hcs-image-primary {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.hcs-image-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+.hcs-card:hover .hcs-image-primary {
+  opacity: 0;
+}
+
+.hcs-card:hover .hcs-image-hover {
+  opacity: 1;
+}
+
+.hcs-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .hcs-content {
   padding: 10px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .hcs-title {
@@ -292,15 +343,15 @@ AND REPLACE IT WITH THE CODE BELOW.
 }
 
 .hcs-compare-price {
-  color: #777;
+  color: #999;
   text-decoration: line-through;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .hcs-current-price {
   color: #111;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
 }
 
@@ -358,19 +409,23 @@ AND REPLACE IT WITH THE CODE BELOW.
 }
 
 .hcs-add-to-cart {
-    width: 100%;
-    padding: 8px 10px;
-    border: none;
-    border-radius: 0;
-    background: #111;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    display: block;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 0;
+  background: #111;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  display: block;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-top: auto;
+  text-decoration: none;
+  box-sizing: border-box;
 }
 
 .hcs-add-to-cart:hover {
@@ -614,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
     // Update image
-    const image = card.querySelector('.hcs-image');
+    const image = card.querySelector('.hcs-image-primary');
     if (
       image &&
       variant.featured_image &&
