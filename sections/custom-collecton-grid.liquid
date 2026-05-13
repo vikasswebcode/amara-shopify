@@ -28,26 +28,26 @@
                 <span class="hcs-sale-badge">Sale</span>
               {%- endif -%}
 
-              <a href="{{ product.url }}" class="hcs-image-link">
-                <div class="hcs-image-wrapper">
-                  {% if current_variant.featured_image %}
-                    {% assign display_image = current_variant.featured_image %}
-                  {% else %}
-                    {% assign display_image = product.featured_image %}
-                  {% endif %}
-
-                  {% if display_image %}
-                    <img
-                      src="{{ display_image | image_url: width: 800 }}"
-                      alt="{{ product.title | escape }}"
-                      width="{{ display_image.width }}"
-                      height="{{ display_image.height }}"
-                      loading="lazy"
-                      class="hcs-image"
-                    >
-                  {% endif %}
+              <div class="hcs-image-wrapper">
+                <div class="hcs-slides">
+                  {% for image in product.images limit: 10 %}
+                    <div class="hcs-slide" data-image-id="{{ image.id }}">
+                      <a href="{{ product.url }}" class="hcs-image-link">
+                        <img
+                          src="{{ image | image_url: width: 800 }}"
+                          alt="{{ product.title | escape }}"
+                          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                          class="hcs-image"
+                        >
+                      </a>
+                    </div>
+                  {% endfor %}
                 </div>
-              </a>
+                {% if product.images.size > 1 %}
+                  <button class="hcs-arrow hcs-prev" type="button" aria-label="Previous">&#8249;</button>
+                  <button class="hcs-arrow hcs-next" type="button" aria-label="Next">&#8250;</button>
+                {% endif %}
+              </div>
 
               <div class="hcs-content">
                 <h3 class="hcs-title">
@@ -92,7 +92,7 @@
                             type="button"
                             class="hcs-swatch{% if visible_count == 0 %} active{% endif %}"
                             data-value="{{ color_value | escape }}"
-                            data-image="{% if variant.featured_image %}{{ variant.featured_image | image_url: width: 800 }}{% endif %}"
+                            data-image-id="{% if variant.featured_image %}{{ variant.featured_image.id }}{% endif %}"
                             title="{{ color_value }}"
                             style="background-color: {{ color_value | downcase }};"
                           ></button>
@@ -261,19 +261,79 @@ AND REPLACE IT WITH THE CODE BELOW.
   color: inherit;
 }
 
+.hcs-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .hcs-image-wrapper {
   background: #ececec;
   aspect-ratio: 4 / 5;
   overflow: hidden;
+  position: relative;
+}
+
+.hcs-slides {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.hcs-slide {
+  min-width: 100%;
+  height: 100%;
+  flex-shrink: 0;
 }
 
 .hcs-image {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hcs-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.9);
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 5;
+  padding: 0;
+  color: #111;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  line-height: 1;
+}
+
+.hcs-prev { left: 8px; }
+.hcs-next { right: 8px; }
+
+.hcs-card:hover .hcs-arrow {
+  opacity: 1;
+}
+
+.hcs-arrow:hover {
+  background: #fff;
 }
 
 .hcs-content {
   padding: 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .hcs-title {
@@ -367,6 +427,14 @@ AND REPLACE IT WITH THE CODE BELOW.
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: auto;
+  box-sizing: border-box;
 }
 
 .hcs-add-to-cart:hover {
@@ -612,17 +680,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
 
-    // Update image
-    const image = card.querySelector('.hcs-image');
-    if (
-      image &&
-      variant.featured_image &&
-      (variant.featured_image.src || variant.featured_image.url)
-    ) {
-      image.src =
-        variant.featured_image.src ||
-        variant.featured_image.url;
-      image.removeAttribute('srcset');
+    // Navigate slider to variant image
+    if (variant.featured_image && variant.featured_image.id) {
+      goToImageById(card, variant.featured_image.id, true);
     }
 
     // Update prices
@@ -683,42 +743,99 @@ document.addEventListener('DOMContentLoaded', function () {
     return true;
   }
 
-  /**
-   * Click events
-   */
+  /* ── Slider ── */
+  function getSlideIndex(card) {
+    return parseInt(card.dataset.slideIndex || '0', 10);
+  }
+
+  function goToSlide(card, index) {
+    const slides = card.querySelectorAll('.hcs-slide');
+    if (!slides.length) return;
+    index = Math.max(0, Math.min(index, slides.length - 1));
+    card.dataset.slideIndex = index;
+    const track = card.querySelector('.hcs-slides');
+    if (track) track.style.transform = 'translateX(-' + (index * 100) + '%)';
+  }
+
+  function goToImageById(card, imageId, persist) {
+    if (!imageId) return;
+    const slides = card.querySelectorAll('.hcs-slide');
+    slides.forEach(function (slide, i) {
+      if (String(slide.dataset.imageId) === String(imageId)) {
+        if (persist) {
+          goToSlide(card, i);
+        } else {
+          const track = card.querySelector('.hcs-slides');
+          if (track) track.style.transform = 'translateX(-' + (i * 100) + '%)';
+        }
+      }
+    });
+  }
+
+  /* ── Events ── */
   document.addEventListener('click', function (e) {
+    // Arrow prev/next
+    const arrow = e.target.closest('.hcs-arrow');
+    if (arrow) {
+      e.preventDefault();
+      const card = arrow.closest('.hcs-card-inner');
+      if (!card) return;
+      const slides = card.querySelectorAll('.hcs-slide');
+      let idx = getSlideIndex(card);
+      if (arrow.classList.contains('hcs-prev')) {
+        idx = idx > 0 ? idx - 1 : slides.length - 1;
+      } else {
+        idx = idx < slides.length - 1 ? idx + 1 : 0;
+      }
+      goToSlide(card, idx);
+      return;
+    }
+
+    // Swatch click
     const swatch = e.target.closest('.hcs-swatch');
     if (swatch) {
       e.preventDefault();
-
       const card = swatch.closest('.hcs-card-inner');
       if (!card) return;
-
       if (activate(swatch, '.hcs-swatch')) {
         updateCard(card);
       }
       return;
     }
 
+    // Size click
     const size = e.target.closest('.hcs-size');
     if (size) {
       e.preventDefault();
-
       const card = size.closest('.hcs-card-inner');
       if (!card) return;
-
       if (activate(size, '.hcs-size')) {
         updateCard(card);
       }
       return;
     }
 
-    const disabledButton = e.target.closest(
-      '.hcs-submit-button.disabled'
-    );
-    if (disabledButton) {
-      e.preventDefault();
-    }
+    if (e.target.closest('.hcs-submit-button.disabled')) e.preventDefault();
+  });
+
+  // Swatch hover → preview image
+  document.addEventListener('mouseover', function (e) {
+    const swatch = e.target.closest('.hcs-swatch');
+    if (!swatch || swatch.classList.contains('disabled')) return;
+    const card = swatch.closest('.hcs-card-inner');
+    if (!card) return;
+    const imageId = swatch.dataset.imageId;
+    if (imageId) goToImageById(card, imageId, false);
+  });
+
+  // Swatch mouseleave → restore selected slide
+  document.addEventListener('mouseout', function (e) {
+    const swatch = e.target.closest('.hcs-swatch');
+    if (!swatch) return;
+    if (e.relatedTarget && e.relatedTarget.closest('.hcs-swatch')) return;
+    const card = swatch.closest('.hcs-card-inner');
+    if (!card) return;
+    goToSlide(card, getSlideIndex(card));
   });
 
   /**
