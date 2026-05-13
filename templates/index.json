@@ -1086,6 +1086,47 @@
         "padding-block-start": 10,
         "padding-block-end": 40
       }
+    },
+    "marquee_CnKp6d": {
+      "type": "marquee",
+      "blocks": {
+        "text_ctQKCm": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We make things that work better and last longer.</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "tight",
+            "letter_spacing": "tight",
+            "case": "none",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_ctQKCm"
+      ],
+      "name": "t:names.marquee_section",
+      "settings": {
+        "movement_direction": "normal",
+        "color_scheme": "scheme-e3a1b02b-2ba3-47d0-bc02-4110efd4bcdd",
+        "padding-block-start": 18,
+        "padding-block-end": 18,
+        "gap_between_elements": 15
+      }
     }
   },
   "order": [
@@ -1094,6 +1135,7 @@
     "section_fDMMce",
     "product_list_fa6P9H",
     "custom_collecton_grid_z9Upyb",
-    "product_hotspots_BYML3F"
+    "product_hotspots_BYML3F",
+    "marquee_CnKp6d"
   ]
 }
