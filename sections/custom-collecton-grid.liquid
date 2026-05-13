@@ -28,38 +28,27 @@
                 <span class="hcs-sale-badge">Sale</span>
               {%- endif -%}
 
-              <a href="{{ product.url }}" class="hcs-image-link">
-                <div class="hcs-image-wrapper">
-                  {% if current_variant.featured_image %}
-                    {% assign display_image = current_variant.featured_image %}
-                  {% else %}
-                    {% assign display_image = product.featured_image %}
-                  {% endif %}
-
-                  {% if display_image %}
-                    <img
-                      src="{{ display_image | image_url: width: 800 }}"
-                      alt="{{ product.title | escape }}"
-                      width="{{ display_image.width }}"
-                      height="{{ display_image.height }}"
-                      loading="lazy"
-                      class="hcs-image hcs-image-primary"
-                    >
-                  {% endif %}
-
-                  {% assign hover_image = product.images[1] %}
-                  {% if hover_image %}
-                    <img
-                      src="{{ hover_image | image_url: width: 800 }}"
-                      alt="{{ product.title | escape }}"
-                      width="{{ hover_image.width }}"
-                      height="{{ hover_image.height }}"
-                      loading="lazy"
-                      class="hcs-image hcs-image-hover"
-                    >
-                  {% endif %}
+              <div class="hcs-image-wrapper">
+                <div class="hcs-slides">
+                  {% for image in product.images limit: 10 %}
+                    <div class="hcs-slide" data-image-id="{{ image.id }}">
+                      <a href="{{ product.url }}" class="hcs-image-link">
+                        <img
+                          src="{{ image | image_url: width: 800 }}"
+                          alt="{{ product.title | escape }}"
+                          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                          class="hcs-image"
+                        >
+                      </a>
+                    </div>
+                  {% endfor %}
                 </div>
-              </a>
+
+                {% if product.images.size > 1 %}
+                  <button class="hcs-arrow hcs-prev" type="button" aria-label="Previous image">&#8249;</button>
+                  <button class="hcs-arrow hcs-next" type="button" aria-label="Next image">&#8250;</button>
+                {% endif %}
+              </div>
 
               <div class="hcs-content">
                 <h3 class="hcs-title">
@@ -104,7 +93,7 @@
                             type="button"
                             class="hcs-swatch{% if visible_count == 0 %} active{% endif %}"
                             data-value="{{ color_value | escape }}"
-                            data-image="{% if variant.featured_image %}{{ variant.featured_image | image_url: width: 800 }}{% endif %}"
+                            data-image-id="{% if variant.featured_image %}{{ variant.featured_image.id }}{% endif %}"
                             title="{{ color_value }}"
                             style="background-color: {{ color_value | downcase }};"
                           ></button>
@@ -279,6 +268,19 @@ AND REPLACE IT WITH THE CODE BELOW.
   position: relative;
 }
 
+.hcs-slides {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.hcs-slide {
+  min-width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
 .hcs-image {
   width: 100%;
   height: 100%;
@@ -286,38 +288,38 @@ AND REPLACE IT WITH THE CODE BELOW.
   display: block;
 }
 
-.hcs-image-primary {
-  opacity: 1;
-  transition: opacity 0.4s ease;
-  position: relative;
-  z-index: 1;
-}
-
-.hcs-image-hover {
+.hcs-arrow {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   opacity: 0;
-  transition: opacity 0.4s ease;
-  z-index: 2;
+  transition: opacity 0.25s ease, background 0.2s ease;
+  z-index: 5;
+  padding: 0;
+  color: #111;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-.hcs-card:hover .hcs-image-primary {
-  opacity: 0;
+.hcs-arrow:hover {
+  background: #fff;
 }
 
-.hcs-card:hover .hcs-image-hover {
+.hcs-prev { left: 10px; }
+.hcs-next { right: 10px; }
+
+.hcs-card:hover .hcs-arrow {
   opacity: 1;
-}
-
-.hcs-card:has(.hcs-content:hover) .hcs-image-primary {
-  opacity: 1;
-}
-
-.hcs-card:has(.hcs-content:hover) .hcs-image-hover {
-  opacity: 0;
 }
 
 .hcs-card-inner {
@@ -508,17 +510,12 @@ document.addEventListener('DOMContentLoaded', function () {
   function getVariants(card) {
     const json = card.querySelector('.hcs-variants-json');
     if (!json) return [];
-    try {
-      return JSON.parse(json.textContent);
-    } catch (e) {
-      return [];
-    }
+    try { return JSON.parse(json.textContent); } catch (e) { return []; }
   }
 
   function getOptionIndexes(card) {
     const swatches = card.querySelector('.hcs-swatches');
     const sizes = card.querySelector('.hcs-sizes');
-
     return {
       colorIndex: swatches ? parseInt(swatches.dataset.optionIndex, 10) : null,
       sizeIndex: sizes ? parseInt(sizes.dataset.optionIndex, 10) : null
@@ -528,7 +525,6 @@ document.addEventListener('DOMContentLoaded', function () {
   function getSelectedValues(card) {
     const activeSwatch = card.querySelector('.hcs-swatch.active');
     const activeSize = card.querySelector('.hcs-size.active');
-
     return {
       color: activeSwatch ? activeSwatch.dataset.value : null,
       size: activeSize ? activeSize.dataset.value : null
@@ -540,120 +536,91 @@ document.addEventListener('DOMContentLoaded', function () {
     const { colorIndex, sizeIndex } = getOptionIndexes(card);
     const { color, size } = getSelectedValues(card);
 
-    let matched = variants.find(function (variant) {
-      if (color && colorIndex !== null && variant.options[colorIndex] !== color) {
-        return false;
-      }
-
-      if (size && sizeIndex !== null && variant.options[sizeIndex] !== size) {
-        return false;
-      }
-
+    let matched = variants.find(function (v) {
+      if (color && colorIndex !== null && v.options[colorIndex] !== color) return false;
+      if (size && sizeIndex !== null && v.options[sizeIndex] !== size) return false;
       return true;
     });
 
-    if (!matched) {
-      matched = variants.find(v => v.available) || variants[0];
-    }
-
+    if (!matched) matched = variants.find(v => v.available) || variants[0];
     return matched;
   }
 
-  /**
-   * Update size availability based on selected color
-   */
+  /* ── Slider ── */
+  function getSlideIndex(card) {
+    return parseInt(card.dataset.slideIndex || '0', 10);
+  }
+
+  function goToSlide(card, index) {
+    const slides = card.querySelectorAll('.hcs-slide');
+    if (!slides.length) return;
+    index = Math.max(0, Math.min(index, slides.length - 1));
+    card.dataset.slideIndex = index;
+    const track = card.querySelector('.hcs-slides');
+    if (track) track.style.transform = 'translateX(-' + (index * 100) + '%)';
+  }
+
+  function goToImageById(card, imageId, persist) {
+    if (!imageId) return;
+    const slides = card.querySelectorAll('.hcs-slide');
+    slides.forEach(function (slide, i) {
+      if (String(slide.dataset.imageId) === String(imageId)) {
+        if (persist) {
+          goToSlide(card, i);
+        } else {
+          const track = card.querySelector('.hcs-slides');
+          if (track) track.style.transform = 'translateX(-' + (i * 100) + '%)';
+        }
+      }
+    });
+  }
+
+  /* ── Availability ── */
   function updateSizeAvailability(card) {
     const variants = getVariants(card);
     const { colorIndex, sizeIndex } = getOptionIndexes(card);
     const { color } = getSelectedValues(card);
-
     if (sizeIndex === null) return;
 
-    const sizeButtons = card.querySelectorAll('.hcs-size');
-
-    sizeButtons.forEach(function (button) {
-      const sizeValue = button.dataset.value;
-
-      const available = variants.some(function (variant) {
-        const colorMatch =
-          !color ||
-          colorIndex === null ||
-          variant.options[colorIndex] === color;
-
-        const sizeMatch = variant.options[sizeIndex] === sizeValue;
-
-        return colorMatch && sizeMatch && variant.available;
+    card.querySelectorAll('.hcs-size').forEach(function (btn) {
+      const available = variants.some(function (v) {
+        const colorOk = !color || colorIndex === null || v.options[colorIndex] === color;
+        return colorOk && v.options[sizeIndex] === btn.dataset.value && v.available;
       });
-
-      if (available) {
-        button.classList.remove('disabled');
-        button.removeAttribute('aria-disabled');
-      } else {
-        button.classList.add('disabled');
-        button.setAttribute('aria-disabled', 'true');
-        button.classList.remove('active');
-      }
+      btn.classList.toggle('disabled', !available);
+      btn.toggleAttribute('aria-disabled', !available);
+      if (!available) btn.classList.remove('active');
     });
 
-    // If no active size or active size disabled, auto-select first available size
-    const activeSize = card.querySelector('.hcs-size.active');
-    if (!activeSize) {
-      const firstAvailable = card.querySelector('.hcs-size:not(.disabled)');
-      if (firstAvailable) {
-        firstAvailable.classList.add('active');
-      }
+    if (!card.querySelector('.hcs-size.active')) {
+      const first = card.querySelector('.hcs-size:not(.disabled)');
+      if (first) first.classList.add('active');
     }
   }
 
-  /**
-   * Update color availability based on selected size
-   */
   function updateColorAvailability(card) {
     const variants = getVariants(card);
     const { colorIndex, sizeIndex } = getOptionIndexes(card);
     const { size } = getSelectedValues(card);
-
     if (colorIndex === null) return;
 
-    const swatches = card.querySelectorAll('.hcs-swatch');
-
-    swatches.forEach(function (button) {
-      const colorValue = button.dataset.value;
-
-      const available = variants.some(function (variant) {
-        const colorMatch = variant.options[colorIndex] === colorValue;
-
-        const sizeMatch =
-          !size ||
-          sizeIndex === null ||
-          variant.options[sizeIndex] === size;
-
-        return colorMatch && sizeMatch && variant.available;
+    card.querySelectorAll('.hcs-swatch').forEach(function (btn) {
+      const available = variants.some(function (v) {
+        const sizeOk = !size || sizeIndex === null || v.options[sizeIndex] === size;
+        return v.options[colorIndex] === btn.dataset.value && sizeOk && v.available;
       });
-
-      if (available) {
-        button.classList.remove('disabled');
-        button.removeAttribute('aria-disabled');
-      } else {
-        button.classList.add('disabled');
-        button.setAttribute('aria-disabled', 'true');
-        button.classList.remove('active');
-      }
+      btn.classList.toggle('disabled', !available);
+      btn.toggleAttribute('aria-disabled', !available);
+      if (!available) btn.classList.remove('active');
     });
 
-    // If no active color, select first available
-    const activeSwatch = card.querySelector('.hcs-swatch.active');
-    if (!activeSwatch) {
-      const firstAvailable = card.querySelector('.hcs-swatch:not(.disabled)');
-      if (firstAvailable) {
-        firstAvailable.classList.add('active');
-      }
+    if (!card.querySelector('.hcs-swatch.active')) {
+      const first = card.querySelector('.hcs-swatch:not(.disabled)');
+      if (first) first.classList.add('active');
     }
   }
 
-  /**
-   * Update UI with selected variant
-   */
+  /* ── Update card UI ── */
   function updateCard(card) {
     updateSizeAvailability(card);
     updateColorAvailability(card);
@@ -664,130 +631,118 @@ document.addEventListener('DOMContentLoaded', function () {
     const productUrl = card.dataset.productUrl;
     const variantUrl = productUrl + '?variant=' + variant.id;
 
-    // Hidden input
     const hiddenInput = card.querySelector('.hcs-variant-id');
     if (hiddenInput) hiddenInput.value = variant.id;
 
-    // Update links
-    card.querySelectorAll('.hcs-image-link, .hcs-title a, .hcs-submit-button')
-      .forEach(function (link) {
-        if (link.tagName.toLowerCase() === 'a') {
-          link.href = variantUrl;
-        }
-      });
+    card.querySelectorAll('.hcs-image-link, .hcs-title a, .hcs-submit-button').forEach(function (link) {
+      if (link.tagName.toLowerCase() === 'a') link.href = variantUrl;
+    });
 
-    // Update image
-    const image = card.querySelector('.hcs-image-primary');
-    if (
-      image &&
-      variant.featured_image &&
-      (variant.featured_image.src || variant.featured_image.url)
-    ) {
-      image.src =
-        variant.featured_image.src ||
-        variant.featured_image.url;
-      image.removeAttribute('srcset');
+    // Navigate slider to variant image
+    if (variant.featured_image && variant.featured_image.id) {
+      goToImageById(card, variant.featured_image.id, true);
     }
 
-    // Update prices
     const currentPrice = card.querySelector('.hcs-current-price');
     const priceWrapper = card.querySelector('.hcs-price');
     let comparePrice = card.querySelector('.hcs-compare-price');
 
-    if (currentPrice) {
-      currentPrice.textContent = formatMoney(variant.price);
-    }
+    if (currentPrice) currentPrice.textContent = formatMoney(variant.price);
 
-    if (
-      variant.compare_at_price &&
-      variant.compare_at_price > variant.price
-    ) {
+    if (variant.compare_at_price && variant.compare_at_price > variant.price) {
       if (!comparePrice && priceWrapper) {
         comparePrice = document.createElement('span');
         comparePrice.className = 'hcs-compare-price';
         priceWrapper.insertBefore(comparePrice, currentPrice);
       }
-
-      if (comparePrice) {
-        comparePrice.textContent = formatMoney(
-          variant.compare_at_price
-        );
-      }
+      if (comparePrice) comparePrice.textContent = formatMoney(variant.compare_at_price);
     } else if (comparePrice) {
       comparePrice.remove();
     }
 
-    // Update submit button
     const submitButton = card.querySelector('.hcs-submit-button');
     if (submitButton) {
-      if (variant.available) {
-        submitButton.classList.remove('disabled');
-        submitButton.removeAttribute('aria-disabled');
-        submitButton.textContent = 'Submit';
-      } else {
-        submitButton.classList.add('disabled');
-        submitButton.setAttribute('aria-disabled', 'true');
-        submitButton.textContent = 'Sold Out';
-      }
+      const avail = variant.available;
+      submitButton.classList.toggle('disabled', !avail);
+      submitButton.toggleAttribute('aria-disabled', !avail);
+      submitButton.textContent = avail ? 'Submit' : 'Sold Out';
     }
   }
 
-  /**
-   * Activate clicked button
-   */
   function activate(button, selector) {
     if (button.classList.contains('disabled')) return false;
-
-    const container = button.parentElement;
-    container.querySelectorAll(selector).forEach(function (el) {
-      el.classList.remove('active');
-    });
-
+    button.parentElement.querySelectorAll(selector).forEach(el => el.classList.remove('active'));
     button.classList.add('active');
     return true;
   }
 
-  /**
-   * Click events
-   */
+  /* ── Events ── */
   document.addEventListener('click', function (e) {
+    // Arrow prev/next
+    const arrow = e.target.closest('.hcs-arrow');
+    if (arrow) {
+      e.preventDefault();
+      const card = arrow.closest('.hcs-card-inner');
+      if (!card) return;
+      const slides = card.querySelectorAll('.hcs-slide');
+      let idx = getSlideIndex(card);
+      if (arrow.classList.contains('hcs-prev')) {
+        idx = idx > 0 ? idx - 1 : slides.length - 1;
+      } else {
+        idx = idx < slides.length - 1 ? idx + 1 : 0;
+      }
+      goToSlide(card, idx);
+      return;
+    }
+
+    // Swatch click
     const swatch = e.target.closest('.hcs-swatch');
     if (swatch) {
       e.preventDefault();
-
       const card = swatch.closest('.hcs-card-inner');
       if (!card) return;
-
       if (activate(swatch, '.hcs-swatch')) {
         updateCard(card);
       }
       return;
     }
 
+    // Size click
     const size = e.target.closest('.hcs-size');
     if (size) {
       e.preventDefault();
-
       const card = size.closest('.hcs-card-inner');
       if (!card) return;
-
       if (activate(size, '.hcs-size')) {
         updateCard(card);
       }
       return;
     }
 
-    const disabledButton = e.target.closest(
-      '.hcs-submit-button.disabled'
-    );
-    if (disabledButton) {
-      e.preventDefault();
-    }
+    if (e.target.closest('.hcs-submit-button.disabled')) e.preventDefault();
   });
 
-  /**
-   * Initialize all cards
-   */
+  // Swatch hover → preview image
+  document.addEventListener('mouseover', function (e) {
+    const swatch = e.target.closest('.hcs-swatch');
+    if (!swatch || swatch.classList.contains('disabled')) return;
+    const card = swatch.closest('.hcs-card-inner');
+    if (!card) return;
+    const imageId = swatch.dataset.imageId;
+    if (imageId) goToImageById(card, imageId, false);
+  });
+
+  // Swatch mouse leave → restore selected slide
+  document.addEventListener('mouseout', function (e) {
+    const swatch = e.target.closest('.hcs-swatch');
+    if (!swatch) return;
+    if (e.relatedTarget && e.relatedTarget.closest('.hcs-swatch')) return;
+    const card = swatch.closest('.hcs-card-inner');
+    if (!card) return;
+    goToSlide(card, getSlideIndex(card));
+  });
+
+  /* ── Init ── */
   document.querySelectorAll('.hcs-card-inner').forEach(function (card) {
     updateCard(card);
   });
