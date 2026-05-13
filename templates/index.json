@@ -953,7 +953,7 @@
       },
       "name": "Featured collection",
       "settings": {
-        "collection": "lehenga",
+        "collection": "sari",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 4,
