@@ -990,6 +990,12 @@
     "custom_collecton_grid_z9Upyb": {
       "type": "custom-collecton-grid",
       "blocks": {
+        "collection_card_nxUebY": {
+          "type": "collection_card",
+          "settings": {
+            "collection": "lehenga-copy-copy"
+          }
+        },
         "collection_card_iWWgbq": {
           "type": "collection_card",
           "settings": {
@@ -1007,19 +1013,13 @@
           "settings": {
             "collection": "sari"
           }
-        },
-        "collection_card_nxUebY": {
-          "type": "collection_card",
-          "settings": {
-            "collection": "lehenga-copy-copy"
-          }
         }
       },
       "block_order": [
+        "collection_card_nxUebY",
         "collection_card_iWWgbq",
         "collection_card_ArpbAD",
-        "collection_card_wy9kYc",
-        "collection_card_nxUebY"
+        "collection_card_wy9kYc"
       ],
       "name": "Custom Collection Grid",
       "settings": {
