@@ -162,6 +162,19 @@
                 "price_tVjtKg"
               ]
             },
+            "review_QVmaU6": {
+              "type": "review",
+              "name": "t:names.product_review_stars",
+              "settings": {
+                "stars_style": "shaded",
+                "show_number": true,
+                "rating_color": "primary",
+                "type_preset": "paragraph",
+                "width": "100%",
+                "alignment": "left"
+              },
+              "blocks": {}
+            },
             "product_inventory_nGjPAe": {
               "type": "product-inventory",
               "name": "t:names.product_inventory",
@@ -264,6 +277,7 @@
           },
           "block_order": [
             "group_icgrde",
+            "review_QVmaU6",
             "product_inventory_nGjPAe",
             "divider_VJhene",
             "variant_picker_R3rGDr",
