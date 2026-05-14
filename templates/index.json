@@ -955,7 +955,7 @@
       "settings": {
         "collection": "sari",
         "layout_type": "grid",
-        "carousel_on_mobile": false,
+        "carousel_on_mobile": true,
         "max_products": 4,
         "columns": 4,
         "mobile_columns": "2",
@@ -1077,7 +1077,7 @@
         "gradient_direction": "to top",
         "section_width": "page-width",
         "section_height": "21 / 9",
-        "hotspot_color": "#FFFFFF57",
+        "hotspot_color": "#ffffff57",
         "bullseye_color": "#ffffff",
         "color_scheme": "scheme-1",
         "product_title_gap": 8,
