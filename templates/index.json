@@ -819,7 +819,7 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<h2><strong>Feature Products</strong></h2>",
+                "text": "<h2><strong>Featured products</strong></h2>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "center",
