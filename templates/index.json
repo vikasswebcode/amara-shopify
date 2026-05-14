@@ -969,7 +969,7 @@
         "gap": 28,
         "color_scheme": "scheme-1",
         "padding-block-start": 48,
-        "padding-block-end": 20
+        "padding-block-end": 15
       }
     },
     "custom_collecton_grid_z9Upyb": {
@@ -1012,7 +1012,7 @@
         "columns_desktop": 4,
         "background": "#ffffff",
         "padding_top": 44,
-        "padding_bottom": 44
+        "padding_bottom": 24
       }
     },
     "product_hotspots_BYML3F": {
