@@ -968,7 +968,7 @@
         "horizontal_alignment": "flex-start",
         "gap": 28,
         "color_scheme": "scheme-1",
-        "padding-block-start": 48,
+        "padding-block-start": 40,
         "padding-block-end": 15
       }
     },
@@ -1011,7 +1011,7 @@
         "heading": "Categories",
         "columns_desktop": 4,
         "background": "#ffffff",
-        "padding_top": 44,
+        "padding_top": 40,
         "padding_bottom": 24
       }
     },
