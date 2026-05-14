@@ -33,24 +33,22 @@
                   {%- endif -%}
 
                   <div class="hcs-image-wrapper">
-                    <div class="hcs-slides">
-                      {% for image in product.images limit: 10 %}
-                        <div class="hcs-slide" data-image-id="{{ image.id }}">
-                          <a href="{{ product.url }}" class="hcs-image-link">
-                            <img
-                              src="{{ image | image_url: width: 800 }}"
-                              alt="{{ product.title | escape }}"
-                              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-                              class="hcs-image"
-                            >
-                          </a>
-                        </div>
-                      {% endfor %}
+                    <div class="swiper hcs-inner-swiper">
+                      <div class="swiper-wrapper">
+                        {% for image in product.images limit: 10 %}
+                          <div class="swiper-slide hcs-slide" data-image-id="{{ image.id }}">
+                            <a href="{{ product.url }}" class="hcs-image-link">
+                              <img
+                                src="{{ image | image_url: width: 800 }}"
+                                alt="{{ product.title | escape }}"
+                                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                                class="hcs-image"
+                              >
+                            </a>
+                          </div>
+                        {% endfor %}
+                      </div>
                     </div>
-                    {% if product.images.size > 1 %}
-                      <button class="hcs-arrow hcs-prev" type="button" aria-label="Previous">&#8249;</button>
-                      <button class="hcs-arrow hcs-next" type="button" aria-label="Next">&#8250;</button>
-                    {% endif %}
                   </div>
 
                   <div class="hcs-content">
@@ -195,19 +193,21 @@
   font-weight: 700;
 }
 
+/* Outer slider */
 .hcs-swiper {
   width: 100%;
   overflow: hidden;
 }
 
-.hcs-swiper .swiper-wrapper {
+.hcs-swiper > .swiper-wrapper {
   align-items: stretch;
 }
 
-.hcs-swiper .swiper-slide {
+.hcs-swiper > .swiper-wrapper > .swiper-slide {
   height: auto;
 }
 
+/* Card */
 .hcs-card {
   background: #fff;
   border-radius: 0;
@@ -216,6 +216,49 @@
   height: 100%;
 }
 
+.hcs-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Inner image swiper */
+.hcs-image-wrapper {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #f4f4f4;
+}
+
+.hcs-inner-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.hcs-inner-swiper .swiper-wrapper {
+  height: 100%;
+}
+
+.hcs-inner-swiper .swiper-slide {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.hcs-image-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+.hcs-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Sale badge */
 .hcs-sale-badge {
   position: absolute;
   top: 10px;
@@ -230,73 +273,7 @@
   z-index: 2;
 }
 
-.hcs-image-link,
-.hcs-title a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.hcs-card-inner {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.hcs-image-wrapper {
-  background: #f4f4f4;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  position: relative;
-}
-
-.hcs-slides {
-  display: flex;
-  height: 100%;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
-}
-
-.hcs-slide {
-  min-width: 100%;
-  height: 100%;
-  flex-shrink: 0;
-}
-
-.hcs-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.hcs-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255,255,255,0.85);
-  border: none;
-  border-radius: 0;
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 5;
-  padding: 0;
-  color: #111;
-  line-height: 1;
-}
-
-.hcs-prev { left: 0; }
-.hcs-next { right: 0; }
-
-.hcs-card:hover .hcs-arrow { opacity: 1; }
-.hcs-arrow:hover { background: #fff; }
-
+/* Content */
 .hcs-content {
   padding: 12px 8px 10px;
   text-align: left;
@@ -314,7 +291,10 @@
   letter-spacing: 0.2px;
 }
 
-.hcs-title a { color: #111; }
+.hcs-title a {
+  text-decoration: none;
+  color: #111;
+}
 
 .hcs-price {
   display: flex;
@@ -387,7 +367,6 @@
 
 .hcs-extra {
   font-size: 11px;
-  font-weight: 400;
   color: #888;
 }
 
@@ -395,7 +374,6 @@
   width: 100%;
   padding: 10px;
   border: 1px solid #111;
-  border-radius: 0;
   background: #111;
   color: #fff;
   font-weight: 500;
@@ -430,13 +408,7 @@
   pointer-events: none;
 }
 
-.hcs-size.disabled {
-  text-decoration: line-through;
-}
-
-.hcs-swatch.disabled {
-  position: relative;
-}
+.hcs-size.disabled { text-decoration: line-through; }
 
 .hcs-swatch.disabled::after {
   content: '';
@@ -448,6 +420,8 @@
   background: #111;
   transform: rotate(-45deg);
 }
+
+.hcs-swatch.disabled { position: relative; }
 </style>
 
 
@@ -456,7 +430,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-  /* ── Swiper (outer collection slider) ── */
+  /* ── Outer collection slider (no arrows) ── */
   new Swiper('.hcs-swiper', {
     slidesPerView: {{ section.settings.columns_desktop }},
     spaceBetween: 10,
@@ -465,22 +439,29 @@ document.addEventListener('DOMContentLoaded', function () {
     pagination: false,
     grabCursor: true,
     breakpoints: {
-      0: {
-        slidesPerView: 1.3,
-        spaceBetween: 6
-      },
-      576: {
-        slidesPerView: 2.1,
-        spaceBetween: 8
-      },
-      992: {
-        slidesPerView: {{ section.settings.columns_desktop }},
-        spaceBetween: 10
-      }
+      0:   { slidesPerView: 1.3, spaceBetween: 6 },
+      576: { slidesPerView: 2.1, spaceBetween: 8 },
+      992: { slidesPerView: {{ section.settings.columns_desktop }}, spaceBetween: 10 }
     }
   });
 
-  /* ── Product card helpers ── */
+  /* ── Inner product image swipers (no arrows) ── */
+  const innerSwipers = new Map();
+
+  document.querySelectorAll('.hcs-inner-swiper').forEach(function (el) {
+    const card = el.closest('.hcs-card-inner');
+    const swiper = new Swiper(el, {
+      slidesPerView: 1,
+      loop: false,
+      navigation: false,
+      pagination: false,
+      allowTouchMove: true,
+      grabCursor: true
+    });
+    if (card) innerSwipers.set(card, swiper);
+  });
+
+  /* ── Helpers ── */
   function formatMoney(cents) {
     if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
       return Shopify.formatMoney(cents, "{{ shop.money_format }}");
@@ -489,30 +470,25 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getVariants(card) {
-    const json = card.querySelector('.hcs-variants-json');
-    if (!json) return [];
-    try {
-      return JSON.parse(json.textContent);
-    } catch (e) {
-      return [];
-    }
+    try { return JSON.parse(card.querySelector('.hcs-variants-json').textContent); }
+    catch (e) { return []; }
   }
 
   function getOptionIndexes(card) {
     const swatches = card.querySelector('.hcs-swatches');
-    const sizes = card.querySelector('.hcs-sizes');
+    const sizes    = card.querySelector('.hcs-sizes');
     return {
       colorIndex: swatches ? parseInt(swatches.dataset.optionIndex, 10) : null,
-      sizeIndex: sizes ? parseInt(sizes.dataset.optionIndex, 10) : null
+      sizeIndex:  sizes    ? parseInt(sizes.dataset.optionIndex,    10) : null
     };
   }
 
   function getSelectedValues(card) {
     const activeSwatch = card.querySelector('.hcs-swatch.active');
-    const activeSize = card.querySelector('.hcs-size.active');
+    const activeSize   = card.querySelector('.hcs-size.active');
     return {
       color: activeSwatch ? activeSwatch.dataset.value : null,
-      size: activeSize ? activeSize.dataset.value : null
+      size:  activeSize   ? activeSize.dataset.value   : null
     };
   }
 
@@ -520,15 +496,37 @@ document.addEventListener('DOMContentLoaded', function () {
     const variants = getVariants(card);
     const { colorIndex, sizeIndex } = getOptionIndexes(card);
     const { color, size } = getSelectedValues(card);
-
-    let matched = variants.find(function (variant) {
-      if (color && colorIndex !== null && variant.options[colorIndex] !== color) return false;
-      if (size && sizeIndex !== null && variant.options[sizeIndex] !== size) return false;
+    let matched = variants.find(function (v) {
+      if (color && colorIndex !== null && v.options[colorIndex] !== color) return false;
+      if (size  && sizeIndex  !== null && v.options[sizeIndex]  !== size)  return false;
       return true;
     });
+    return matched || variants.find(v => v.available) || variants[0];
+  }
 
-    if (!matched) matched = variants.find(v => v.available) || variants[0];
-    return matched;
+  function goToSlide(card, index) {
+    const sw = innerSwipers.get(card);
+    if (!sw) return;
+    const total = sw.slides.length;
+    index = Math.max(0, Math.min(index, total - 1));
+    card.dataset.slideIndex = index;
+    sw.slideTo(index, 400);
+  }
+
+  function goToImageById(card, imageId, persist) {
+    if (!imageId) return;
+    const sw = innerSwipers.get(card);
+    if (!sw) return;
+    sw.slides.forEach(function (slide, i) {
+      if (String(slide.dataset.imageId) === String(imageId)) {
+        if (persist) {
+          card.dataset.slideIndex = i;
+          sw.slideTo(i, 400);
+        } else {
+          sw.slideTo(i, 300);
+        }
+      }
+    });
   }
 
   function updateSizeAvailability(card) {
@@ -537,21 +535,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const { color } = getSelectedValues(card);
     if (sizeIndex === null) return;
 
-    card.querySelectorAll('.hcs-size').forEach(function (button) {
-      const sizeValue = button.dataset.value;
-      const available = variants.some(function (variant) {
-        const colorMatch = !color || colorIndex === null || variant.options[colorIndex] === color;
-        return colorMatch && variant.options[sizeIndex] === sizeValue && variant.available;
+    card.querySelectorAll('.hcs-size').forEach(function (btn) {
+      const available = variants.some(function (v) {
+        const colorOk = !color || colorIndex === null || v.options[colorIndex] === color;
+        return colorOk && v.options[sizeIndex] === btn.dataset.value && v.available;
       });
-
-      if (available) {
-        button.classList.remove('disabled');
-        button.removeAttribute('aria-disabled');
-      } else {
-        button.classList.add('disabled');
-        button.setAttribute('aria-disabled', 'true');
-        button.classList.remove('active');
-      }
+      btn.classList.toggle('disabled', !available);
+      available ? btn.removeAttribute('aria-disabled') : btn.setAttribute('aria-disabled', 'true');
+      if (!available) btn.classList.remove('active');
     });
 
     if (!card.querySelector('.hcs-size.active')) {
@@ -566,21 +557,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const { size } = getSelectedValues(card);
     if (colorIndex === null) return;
 
-    card.querySelectorAll('.hcs-swatch').forEach(function (button) {
-      const colorValue = button.dataset.value;
-      const available = variants.some(function (variant) {
-        const sizeMatch = !size || sizeIndex === null || variant.options[sizeIndex] === size;
-        return variant.options[colorIndex] === colorValue && sizeMatch && variant.available;
+    card.querySelectorAll('.hcs-swatch').forEach(function (btn) {
+      const available = variants.some(function (v) {
+        const sizeOk = !size || sizeIndex === null || v.options[sizeIndex] === size;
+        return v.options[colorIndex] === btn.dataset.value && sizeOk && v.available;
       });
-
-      if (available) {
-        button.classList.remove('disabled');
-        button.removeAttribute('aria-disabled');
-      } else {
-        button.classList.add('disabled');
-        button.setAttribute('aria-disabled', 'true');
-        button.classList.remove('active');
-      }
+      btn.classList.toggle('disabled', !available);
+      available ? btn.removeAttribute('aria-disabled') : btn.setAttribute('aria-disabled', 'true');
+      if (!available) btn.classList.remove('active');
     });
 
     if (!card.querySelector('.hcs-swatch.active')) {
@@ -596,108 +580,63 @@ document.addEventListener('DOMContentLoaded', function () {
     const variant = findVariant(card);
     if (!variant) return;
 
-    const productUrl = card.dataset.productUrl;
-    const variantUrl = productUrl + '?variant=' + variant.id;
+    const variantUrl = card.dataset.productUrl + '?variant=' + variant.id;
 
-    const hiddenInput = card.querySelector('.hcs-variant-id');
-    if (hiddenInput) hiddenInput.value = variant.id;
+    card.querySelector('.hcs-variant-id').value = variant.id;
 
-    card.querySelectorAll('.hcs-image-link, .hcs-title a, .hcs-submit-button').forEach(function (link) {
-      if (link.tagName.toLowerCase() === 'a') link.href = variantUrl;
+    card.querySelectorAll('.hcs-image-link, .hcs-title a, .hcs-submit-button').forEach(function (el) {
+      if (el.tagName.toLowerCase() === 'a') el.href = variantUrl;
     });
 
     if (variant.featured_image && variant.featured_image.id) {
       goToImageById(card, variant.featured_image.id, true);
     }
 
-    const currentPrice = card.querySelector('.hcs-current-price');
-    const priceWrapper = card.querySelector('.hcs-price');
-    let comparePrice = card.querySelector('.hcs-compare-price');
+    const currentPriceEl = card.querySelector('.hcs-current-price');
+    const priceWrapper   = card.querySelector('.hcs-price');
+    let comparePriceEl   = card.querySelector('.hcs-compare-price');
 
-    if (currentPrice) currentPrice.textContent = formatMoney(variant.price);
+    if (currentPriceEl) currentPriceEl.textContent = formatMoney(variant.price);
 
     if (variant.compare_at_price && variant.compare_at_price > variant.price) {
-      if (!comparePrice && priceWrapper) {
-        comparePrice = document.createElement('span');
-        comparePrice.className = 'hcs-compare-price';
-        priceWrapper.insertBefore(comparePrice, currentPrice);
+      if (!comparePriceEl && priceWrapper) {
+        comparePriceEl = document.createElement('span');
+        comparePriceEl.className = 'hcs-compare-price';
+        priceWrapper.insertBefore(comparePriceEl, currentPriceEl);
       }
-      if (comparePrice) comparePrice.textContent = formatMoney(variant.compare_at_price);
-    } else if (comparePrice) {
-      comparePrice.remove();
+      if (comparePriceEl) comparePriceEl.textContent = formatMoney(variant.compare_at_price);
+    } else if (comparePriceEl) {
+      comparePriceEl.remove();
     }
 
-    const submitButton = card.querySelector('.hcs-submit-button');
-    if (submitButton) {
+    const submitBtn = card.querySelector('.hcs-submit-button');
+    if (submitBtn) {
       if (variant.available) {
-        submitButton.classList.remove('disabled');
-        submitButton.removeAttribute('aria-disabled');
-        submitButton.textContent = 'Submit';
+        submitBtn.classList.remove('disabled');
+        submitBtn.removeAttribute('aria-disabled');
+        submitBtn.textContent = 'Submit';
       } else {
-        submitButton.classList.add('disabled');
-        submitButton.setAttribute('aria-disabled', 'true');
-        submitButton.textContent = 'Sold Out';
+        submitBtn.classList.add('disabled');
+        submitBtn.setAttribute('aria-disabled', 'true');
+        submitBtn.textContent = 'Sold Out';
       }
     }
   }
 
-  function activate(button, selector) {
-    if (button.classList.contains('disabled')) return false;
-    button.parentElement.querySelectorAll(selector).forEach(el => el.classList.remove('active'));
-    button.classList.add('active');
+  function activate(btn, selector) {
+    if (btn.classList.contains('disabled')) return false;
+    btn.parentElement.querySelectorAll(selector).forEach(el => el.classList.remove('active'));
+    btn.classList.add('active');
     return true;
   }
 
-  /* ── Inner product image slider ── */
-  function getSlideIndex(card) {
-    return parseInt(card.dataset.slideIndex || '0', 10);
-  }
-
-  function goToSlide(card, index) {
-    const slides = card.querySelectorAll('.hcs-slide');
-    if (!slides.length) return;
-    index = Math.max(0, Math.min(index, slides.length - 1));
-    card.dataset.slideIndex = index;
-    const track = card.querySelector('.hcs-slides');
-    if (track) track.style.transform = 'translateX(-' + (index * 100) + '%)';
-  }
-
-  function goToImageById(card, imageId, persist) {
-    if (!imageId) return;
-    card.querySelectorAll('.hcs-slide').forEach(function (slide, i) {
-      if (String(slide.dataset.imageId) === String(imageId)) {
-        if (persist) {
-          goToSlide(card, i);
-        } else {
-          const track = card.querySelector('.hcs-slides');
-          if (track) track.style.transform = 'translateX(-' + (i * 100) + '%)';
-        }
-      }
-    });
-  }
-
-  /* ── Events ── */
+  /* ── Click events ── */
   document.addEventListener('click', function (e) {
-    const arrow = e.target.closest('.hcs-arrow');
-    if (arrow) {
-      e.preventDefault();
-      const card = arrow.closest('.hcs-card-inner');
-      if (!card) return;
-      const slides = card.querySelectorAll('.hcs-slide');
-      let idx = getSlideIndex(card);
-      idx = arrow.classList.contains('hcs-prev')
-        ? (idx > 0 ? idx - 1 : slides.length - 1)
-        : (idx < slides.length - 1 ? idx + 1 : 0);
-      goToSlide(card, idx);
-      return;
-    }
-
     const swatch = e.target.closest('.hcs-swatch');
     if (swatch) {
       e.preventDefault();
       const card = swatch.closest('.hcs-card-inner');
-      if (!card) return;
-      if (activate(swatch, '.hcs-swatch')) updateCard(card);
+      if (card && activate(swatch, '.hcs-swatch')) updateCard(card);
       return;
     }
 
@@ -705,14 +644,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (size) {
       e.preventDefault();
       const card = size.closest('.hcs-card-inner');
-      if (!card) return;
-      if (activate(size, '.hcs-size')) updateCard(card);
+      if (card && activate(size, '.hcs-size')) updateCard(card);
       return;
     }
 
     if (e.target.closest('.hcs-submit-button.disabled')) e.preventDefault();
   });
 
+  /* ── Swatch hover → preview image ── */
   document.addEventListener('mouseover', function (e) {
     const swatch = e.target.closest('.hcs-swatch');
     if (!swatch || swatch.classList.contains('disabled')) return;
@@ -728,9 +667,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (e.relatedTarget && e.relatedTarget.closest('.hcs-swatch')) return;
     const card = swatch.closest('.hcs-card-inner');
     if (!card) return;
-    goToSlide(card, getSlideIndex(card));
+    goToSlide(card, parseInt(card.dataset.slideIndex || '0', 10));
   });
 
+  /* ── Init all cards ── */
   document.querySelectorAll('.hcs-card-inner').forEach(function (card) {
     updateCard(card);
   });
