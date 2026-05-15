@@ -117,7 +117,7 @@
           "settings": {
             "heading": "LEHENGAS",
             "button_label": "SHOP NOW",
-            "link": "",
+            "link": "shopify://collections/lehenga",
             "image": "shopify://shop_images/IMG-6319.jpg"
           }
         }
