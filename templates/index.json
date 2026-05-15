@@ -1008,6 +1008,7 @@
       ],
       "name": "Custom Collection Grid",
       "settings": {
+        "Cst_id": "lehngs",
         "heading": "Categories",
         "columns_desktop": 4,
         "background": "#ffffff",
