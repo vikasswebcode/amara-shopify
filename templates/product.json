@@ -295,7 +295,7 @@
               "settings": {
                 "icon": "caret",
                 "dividers": true,
-                "type_preset": "h6",
+                "type_preset": "h4",
                 "inherit_color_scheme": true,
                 "color_scheme": "",
                 "border": "none",
@@ -311,7 +311,7 @@
                 "accordion_row_PCqAgB": {
                   "type": "_accordion-row",
                   "settings": {
-                    "heading": "Return policy",
+                    "heading": "Product description",
                     "open_by_default": true,
                     "icon": "none",
                     "width": 20
