@@ -82,7 +82,7 @@
         "section_height_custom": 84,
         "color_scheme": "scheme-6",
         "toggle_overlay": true,
-        "overlay_color": "#12121220",
+        "overlay_color": "#12121221",
         "overlay_style": "gradient",
         "gradient_direction": "to top",
         "blurred_reflection": false,
@@ -1009,7 +1009,7 @@
       "name": "Custom Collection Grid",
       "settings": {
         "Cst_id": "lehngs",
-        "heading": "Categories",
+        "heading": "Shop by Categories",
         "columns_desktop": 4,
         "background": "#ffffff",
         "padding_top": 40,
