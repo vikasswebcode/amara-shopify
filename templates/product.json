@@ -595,29 +595,6 @@
                   },
                   "blocks": {}
                 },
-                "price_xNwB7K": {
-                  "type": "price",
-                  "name": "t:names.product_price",
-                  "settings": {
-                    "show_sale_price_first": true,
-                    "show_installments": false,
-                    "show_tax_info": false,
-                    "type_preset": "",
-                    "width": "100%",
-                    "alignment": "left",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "color": "var(--color-foreground)",
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
                 "swatches_BtPXgt": {
                   "type": "swatches",
                   "name": "t:names.swatches",
@@ -635,7 +612,6 @@
               },
               "block_order": [
                 "collection_title_dBz3Ym",
-                "price_xNwB7K",
                 "swatches_BtPXgt"
               ]
             },
@@ -696,7 +672,7 @@
   },
   "order": [
     "main",
-    "product_recommendations_qggXJq",
-    "collection_list_gpcmfC"
+    "collection_list_gpcmfC",
+    "product_recommendations_qggXJq"
   ]
 }
