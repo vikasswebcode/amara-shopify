@@ -978,7 +978,7 @@
         "collection_card_nxUebY": {
           "type": "collection_card",
           "settings": {
-            "collection": "lehenga-copy-copy"
+            "collection": "jewelry"
           }
         },
         "collection_card_iWWgbq": {
@@ -990,7 +990,7 @@
         "collection_card_ArpbAD": {
           "type": "collection_card",
           "settings": {
-            "collection": "lehenga-copy"
+            "collection": "new-arrivals"
           }
         },
         "collection_card_wy9kYc": {
@@ -998,13 +998,20 @@
           "settings": {
             "collection": "sari"
           }
+        },
+        "collection_card_y437tj": {
+          "type": "collection_card",
+          "settings": {
+            "collection": "ready-to-wear"
+          }
         }
       },
       "block_order": [
         "collection_card_nxUebY",
         "collection_card_iWWgbq",
         "collection_card_ArpbAD",
-        "collection_card_wy9kYc"
+        "collection_card_wy9kYc",
+        "collection_card_y437tj"
       ],
       "name": "Custom Collection Grid",
       "settings": {
