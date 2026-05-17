@@ -953,7 +953,7 @@
       },
       "name": "Featured collection",
       "settings": {
-        "collection": "sari",
+        "collection": "new-arrivals",
         "layout_type": "grid",
         "carousel_on_mobile": true,
         "max_products": 4,
