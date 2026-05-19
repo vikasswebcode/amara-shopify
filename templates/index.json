@@ -1026,24 +1026,6 @@
     "product_hotspots_BYML3F": {
       "type": "product-hotspots",
       "blocks": {
-        "hotspot_product_PEHVcd": {
-          "type": "_hotspot-product",
-          "settings": {
-            "product": "navy-blue-sequins-embroidered-lehenga-choli-product-code-7311-blue-ze28-50",
-            "x-position": 20,
-            "y-position": 40
-          },
-          "blocks": {}
-        },
-        "hotspot_product_q6jGEm": {
-          "type": "_hotspot-product",
-          "settings": {
-            "product": "hot-pink-sequin-lehenga-choli-7310-zee26",
-            "x-position": 60,
-            "y-position": 60
-          },
-          "blocks": {}
-        },
         "heading": {
           "type": "text",
           "name": "t:names.heading",
@@ -1072,10 +1054,6 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "hotspot_product_PEHVcd",
-        "hotspot_product_q6jGEm"
-      ],
       "name": "t:names.product_hotspots",
       "settings": {
         "image": "shopify://shop_images/young-woman-beautiful-yellow-dress.jpg",
