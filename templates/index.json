@@ -103,6 +103,25 @@
             "image": "shopify://shop_images/4109D41E-7ABB-4CED-A75F-DEBD5EA1137C.jpg"
           }
         },
+        "banner_b9Hc4x": {
+          "type": "banner",
+          "settings": {
+            "heading": "Modern Wear",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/women-s-apparel",
+            "image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png",
+            "mobile_image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png"
+          }
+        },
+        "banner_RwcfKt": {
+          "type": "banner",
+          "settings": {
+            "heading": "SAREES",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/sari",
+            "image": "shopify://shop_images/4109D41E-7ABB-4CED-A75F-DEBD5EA1137C.jpg"
+          }
+        },
         "banner_WDYFYh": {
           "type": "banner",
           "settings": {
@@ -124,6 +143,8 @@
       },
       "block_order": [
         "banner_9d7Jea",
+        "banner_b9Hc4x",
+        "banner_RwcfKt",
         "banner_WDYFYh",
         "banner_PdKUpf"
       ],
