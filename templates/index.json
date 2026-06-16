@@ -1134,6 +1134,16 @@
         "padding-block-end": 18,
         "gap_between_elements": 15
       }
+    },
+    "custom_collection_showcase_PCHeHj": {
+      "type": "custom-collection-showcase",
+      "name": "Collection Showcase",
+      "settings": {
+        "heading": "Shop the Collection",
+        "collection": "",
+        "products_per_row": 4,
+        "rows": 2
+      }
     }
   },
   "order": [
@@ -1143,6 +1153,7 @@
     "product_list_fa6P9H",
     "custom_collecton_grid_z9Upyb",
     "product_hotspots_BYML3F",
-    "marquee_CnKp6d"
+    "marquee_CnKp6d",
+    "custom_collection_showcase_PCHeHj"
   ]
 }
