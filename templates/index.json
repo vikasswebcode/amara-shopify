@@ -227,10 +227,11 @@
         "banner_xkcUHN": {
           "type": "banner",
           "settings": {
-            "heading": "LEHENGAS",
+            "heading": "Lifestyle Accessories",
             "button_label": "SHOP NOW",
-            "link": "shopify://collections/lehenga",
-            "image": "shopify://shop_images/IMG-6319.jpg"
+            "link": "",
+            "image": "shopify://shop_images/phone-covers-nail-cutters-keychains-and-rest-of-all-those-kind-of-cute-cute-items.png",
+            "mobile_image": "shopify://shop_images/F78CB9F4-DBF2-4450-9C43-4354438D332B.png"
           }
         }
       },
