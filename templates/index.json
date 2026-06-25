@@ -216,10 +216,11 @@
         "banner_gFdaqW": {
           "type": "banner",
           "settings": {
-            "heading": "CHURIDARS",
+            "heading": "Editor’s Picks",
             "button_label": "SHOP NOW",
-            "link": "shopify://collections/churidars",
-            "image": "shopify://shop_images/ACA249D0-7FB4-40C8-80FE-8DCD8826B952.jpg"
+            "link": "",
+            "image": "shopify://shop_images/4ED74ECA-87D9-4E9F-93C4-B039322FED56.png",
+            "mobile_image": "shopify://shop_images/comparing-black-t-shirts-on-a-clothing-rack-in-a-sun-lit-shop.jpg"
           }
         },
         "banner_xkcUHN": {
