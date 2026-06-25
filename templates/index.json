@@ -113,6 +113,16 @@
             "mobile_image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png"
           }
         },
+        "banner_CDkLBz": {
+          "type": "banner",
+          "settings": {
+            "heading": "Men's Wear Collection",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/women-s-apparel",
+            "image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png",
+            "mobile_image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png"
+          }
+        },
         "banner_RwcfKt": {
           "type": "banner",
           "settings": {
@@ -144,6 +154,7 @@
       "block_order": [
         "banner_9d7Jea",
         "banner_b9Hc4x",
+        "banner_CDkLBz",
         "banner_RwcfKt",
         "banner_WDYFYh",
         "banner_PdKUpf"
