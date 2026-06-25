@@ -171,6 +171,86 @@
         "padding_bottom": 10
       }
     },
+    "custom_promo_grid_6yWpfx": {
+      "type": "custom-promo-grid",
+      "blocks": {
+        "banner_pinzWG": {
+          "type": "banner",
+          "settings": {
+            "heading": "SAREES",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/sari",
+            "image": "shopify://shop_images/4109D41E-7ABB-4CED-A75F-DEBD5EA1137C.jpg"
+          }
+        },
+        "banner_TE6tj8": {
+          "type": "banner",
+          "settings": {
+            "heading": "Modern Wear",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/women-s-apparel",
+            "image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png",
+            "mobile_image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png"
+          }
+        },
+        "banner_WtzWxP": {
+          "type": "banner",
+          "settings": {
+            "heading": "Men's Wear Collection",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/women-s-apparel",
+            "image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png",
+            "mobile_image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png"
+          }
+        },
+        "banner_6drxGD": {
+          "type": "banner",
+          "settings": {
+            "heading": "SAREES",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/sari",
+            "image": "shopify://shop_images/4109D41E-7ABB-4CED-A75F-DEBD5EA1137C.jpg"
+          }
+        },
+        "banner_gFdaqW": {
+          "type": "banner",
+          "settings": {
+            "heading": "CHURIDARS",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/churidars",
+            "image": "shopify://shop_images/ACA249D0-7FB4-40C8-80FE-8DCD8826B952.jpg"
+          }
+        },
+        "banner_xkcUHN": {
+          "type": "banner",
+          "settings": {
+            "heading": "LEHENGAS",
+            "button_label": "SHOP NOW",
+            "link": "shopify://collections/lehenga",
+            "image": "shopify://shop_images/IMG-6319.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "banner_pinzWG",
+        "banner_TE6tj8",
+        "banner_WtzWxP",
+        "banner_6drxGD",
+        "banner_gFdaqW",
+        "banner_xkcUHN"
+      ],
+      "name": "Custom Promo Grid",
+      "settings": {
+        "columns": 3,
+        "grid_gap": 10,
+        "section_bg": "#ffffff",
+        "card_bg": "#f4f1ec",
+        "heading_color": "#111111",
+        "button_color": "#111111",
+        "padding_top": 10,
+        "padding_bottom": 10
+      }
+    },
     "section_fDMMce": {
       "type": "section",
       "blocks": {
@@ -1160,6 +1240,7 @@
   "order": [
     "hero_jVaWmY",
     "custom_promo_grid_XXUb8F",
+    "custom_promo_grid_6yWpfx",
     "section_fDMMce",
     "product_list_fa6P9H",
     "custom_collecton_grid_z9Upyb",
