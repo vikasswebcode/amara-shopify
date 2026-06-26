@@ -116,9 +116,9 @@
         "banner_CDkLBz": {
           "type": "banner",
           "settings": {
-            "heading": "Men's Wear Collection",
+            "heading": "Men's Wear",
             "button_label": "SHOP NOW",
-            "link": "shopify://collections/women-s-apparel",
+            "link": "",
             "image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png",
             "mobile_image": "shopify://shop_images/267574F1-8098-4DCF-8B1B-58DDC392C492.png"
           }
