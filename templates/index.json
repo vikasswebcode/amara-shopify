@@ -1249,6 +1249,16 @@
         "products_per_row": 4,
         "rows": 2
       }
+    },
+    "custom_collection_showcase_JEa9ec": {
+      "type": "custom-collection-showcase",
+      "name": "Collection Showcase",
+      "settings": {
+        "heading": "Shop the Collection",
+        "collection": "",
+        "products_per_row": 4,
+        "rows": 2
+      }
     }
   },
   "order": [
@@ -1261,6 +1271,7 @@
     "product_hotspots_BYML3F",
     "marquee_CnKp6d",
     "custom_collection_showcase_PCHeHj",
-    "custom_collection_showcase_Qzg3Nd"
+    "custom_collection_showcase_Qzg3Nd",
+    "custom_collection_showcase_JEa9ec"
   ]
 }
