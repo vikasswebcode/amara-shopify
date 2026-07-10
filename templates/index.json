@@ -209,7 +209,7 @@
           "settings": {
             "heading": "Festive Collection",
             "button_label": "SHOP NOW",
-            "link": "",
+            "link": "shopify://collections/festive-collection",
             "image": "shopify://shop_images/92424FB7-01DD-4644-B262-72A008ED46FF.png",
             "mobile_image": "shopify://shop_images/IMG_8051.png"
           }
